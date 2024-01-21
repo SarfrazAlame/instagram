@@ -22,7 +22,7 @@ const ProfileLink = ({ user }: { user: User }) => {
         size: "lg",
       })}
     >
-      <UserAvatar/>
+      <UserAvatar user={user} />
 
       <p className={`${cn("hidden lg:block", { "font-extrabold": isActive })}`}>
         Profile
