@@ -1,9 +1,10 @@
-import React from 'react'
+import LoginFrom from "@/components/LoginFrom";
+import React from "react";
 
-const LoginPage = () => {
-  return (
-    <div>LoginPage</div>
-  )
-}
+const Page = () => {
+  return <div>
+    <LoginFrom/>
+  </div>;
+};
 
-export default LoginPage
+export default Page;
