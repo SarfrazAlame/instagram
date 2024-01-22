@@ -18,10 +18,15 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
-import { CreatePost } from "@/lib/schemas";
 import { z } from "zod";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { UploadButton } from "@/utils/uploadthing";
+import { toast } from "sonner";
+import Error from "@/components/Error";
+import { CreatePost } from "@/lib/schemas";
 
 const CreatePage = () => {
   const pathname = usePathname();
@@ -48,7 +53,16 @@ const CreatePage = () => {
         </DialogHeader>
 
         <Form {...form}>
-          <form className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(async (values) => {
+              console.log(values);
+              const res = await createPost(values);
+              if (res) {
+                return toast.error(<Error res={res} />);
+              }
+            })}
+            className="space-y-4"
+          >
             {!!fileUrl ? (
               <div className="h-96 md:h-[450px] overflow-hidden rounded-md">
                 <AspectRatio ratio={1 / 1} className="relative h-full">
@@ -67,13 +81,49 @@ const CreatePage = () => {
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel htmlFor="picture">Picture</FormLabel>
-                    <FormControl>{/* uploadbutton */}</FormControl>
+                    <FormControl>
+                      <UploadButton
+                        endpoint="imageUploader"
+                        onClientUploadComplete={(res) => {
+                          form.setValue("fileUrl", res[0].url);
+                          toast.success("Upload completed");
+                        }}
+                        onUploadError={(error: Error) => {
+                          console.error(error);
+                          toast.error("Upload failed");
+                        }}
+                      />
+                    </FormControl>
 
                     <FormDescription>Upload a picture to post</FormDescription>
                   </FormItem>
                 )}
               ></FormField>
             )}
+
+            {!!fileUrl && (
+              <FormField
+                control={form.control}
+                name="caption"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="caption">Caption</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="caption"
+                        id="caption"
+                        placeholder="write a caption"
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            )}
+
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              Create Post
+            </Button>
           </form>
         </Form>
       </DialogContent>
