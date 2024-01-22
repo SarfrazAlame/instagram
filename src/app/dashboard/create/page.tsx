@@ -27,6 +27,7 @@ import { UploadButton } from "@/utils/uploadthing";
 import { toast } from "sonner";
 import Error from "@/components/Error";
 import { CreatePost } from "@/lib/schemas";
+import createPost from "@/lib/action";
 
 const CreatePage = () => {
   const pathname = usePathname();
@@ -55,7 +56,6 @@ const CreatePage = () => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(async (values) => {
-              console.log(values);
               const res = await createPost(values);
               if (res) {
                 return toast.error(<Error res={res} />);

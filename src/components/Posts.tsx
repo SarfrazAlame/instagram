@@ -1,9 +1,17 @@
+import { fetchPosts } from "@/lib/data";
 import React from "react";
+import Post from "./Post";
 
-const Posts = () => {
-  // TODO: Implement data fetching login here...
+const Posts = async () => {
+  const posts = await fetchPosts();
 
-  return <>{/* Map through posts */}</>;
+  return (
+    <>
+      {posts.map((post) => (
+        <Post key={post.id} post={post} />
+      ))}
+    </>
+  );
 };
 
 export default Posts;

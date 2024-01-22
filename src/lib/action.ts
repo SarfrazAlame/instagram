@@ -1,8 +1,10 @@
 'use server'
+import { revalidatePath } from "next/cache"
 import prisma from "./prisma"
 import { CreatePost } from "./schemas"
 import { getUserId } from "./utils"
 import { z } from 'zod'
+import { redirect } from "next/navigation"
 
 export default async function createPost(values: z.infer<typeof CreatePost>) {
     const userId = await getUserId()
@@ -16,7 +18,27 @@ export default async function createPost(values: z.infer<typeof CreatePost>) {
         }
     }
 
-    const {fileUrl, caption} =  validatedFields.data
+    const { fileUrl, caption } = validatedFields.data
 
     // Create post logic
+    try {
+        await prisma.post.create({
+            data: {
+                caption,
+                fileUrl,
+                user: {
+                    connect: {
+                        id: userId
+                    }
+                }
+            }
+        })
+    } catch (error) {
+        return {
+            message: "Database Error: failed to create post"
+        }
+    }
+
+    revalidatePath('/dashboard')
+    redirect('/dashboard')
 }
