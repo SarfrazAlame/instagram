@@ -31,7 +31,7 @@ const Post = async ({ post }: { post: PostWithExtras }) => {
           </div>
         </div>
 
-        <PostOptions/>
+        <PostOptions post={post} userId={userId} />
       </div>
     </div>
   );

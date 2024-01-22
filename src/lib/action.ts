@@ -1,7 +1,7 @@
 'use server'
 import { revalidatePath } from "next/cache"
 import prisma from "./prisma"
-import { CreatePost } from "./schemas"
+import { CreatePost, DeletePost } from "./schemas"
 import { getUserId } from "./utils"
 import { z } from 'zod'
 import { redirect } from "next/navigation"
@@ -41,4 +41,13 @@ export default async function createPost(values: z.infer<typeof CreatePost>) {
 
     revalidatePath('/dashboard')
     redirect('/dashboard')
+}
+
+export default async function deletePost(formData:FormData){
+    const userId = await getUserId()
+    const {id} = DeletePost.parse({
+        id:formData.get('id')
+    })
+
+    
 }
