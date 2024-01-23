@@ -90,7 +90,7 @@ const CreatePage = () => {
                         }}
                         onUploadError={(error: Error) => {
                           console.error(error);
-                          toast.error("Upload failed");
+                          toast.error("Upload failed e");
                         }}
                       />
                     </FormControl>

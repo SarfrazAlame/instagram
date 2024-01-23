@@ -4,6 +4,9 @@ import React from "react";
 import LikeButton from "./LikeButton";
 import Link from "next/link";
 import { Book, MessageCircle } from "lucide-react";
+import ActionIcon from "./ActionIcon";
+import ShareButton from "./ShareButton";
+import BookmarkButton from "./BookmarkButton";
 
 const PostActions = ({
   post,
@@ -15,14 +18,14 @@ const PostActions = ({
   className?: string;
 }) => {
   return (
-    <div className={cn("relative flex items-center w-full gap-x-2", className)}>
+    <div className={cn("relative flex items-start w-full gap-x-2", className)}>
       <LikeButton post={post} userId={userId} />
       <Link href={`/dashboard/p/${post.id}`}>
-        {/* <ActionIcon>
-          <MessageCircle className="h-6 w-6"/>
-      </ActionIcon>
-      <ShareButton postId={post.id}/>
-      <BookmarkButton post={post} userId={userId}/> */}
+        <ActionIcon>
+          <MessageCircle className={"h-6 w-6"} />
+        </ActionIcon>
+        <ShareButton postId={post.id} />
+        <BookmarkButton post={post} userId={userId} />
       </Link>
     </div>
   );
