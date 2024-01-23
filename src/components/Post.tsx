@@ -64,7 +64,7 @@ async function Post({ post }: { post: PostWithExtras }) {
         </div>
       )}
 
-      {/* <Comments postId={post.id} comments={post.comments} userId={userId} /> */}
+      <Comments postId={post.id} comments={post.comments} user={session.user} />
     </div>
   );
 }

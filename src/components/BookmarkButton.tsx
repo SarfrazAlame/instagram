@@ -6,7 +6,7 @@ import React, { useOptimistic } from "react";
 import ActionIcon from "./ActionIcon";
 import { cn } from "@/lib/utils";
 import { Bookmark } from "lucide-react";
-import { bookmarkButton } from "@/lib/action";
+import { bookmarkButton, bookmarkPost } from "@/lib/action";
 
 type Props = {
   post: PostWithExtras;
@@ -30,10 +30,11 @@ const BookmarkButton = ({ post, userId }: Props) => {
   return (
     <form
       action={async (formData: FormData) => {
-        const userId = formData.get("postId");
+        const postId = formData.get("postId");
         addOptimisticsBookmarks({ postId, userId });
-        await bookmarkButton(posId);
+        await bookmarkPost(postId);
       }}
+      className="ml-auto"
     >
       <input type="hidden" name="postId" value={post.id} />
 

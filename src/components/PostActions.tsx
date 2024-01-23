@@ -20,13 +20,13 @@ const PostActions = ({
   return (
     <div className={cn("relative flex items-start w-full gap-x-2", className)}>
       <LikeButton post={post} userId={userId} />
-      <Link href={`/dashboard/p/${post.id}`}>
+      <Link href={`/dashboard/p/${post.id}`} className="flex gap-4">
         <ActionIcon>
           <MessageCircle className={"h-6 w-6"} />
         </ActionIcon>
         <ShareButton postId={post.id} />
-        <BookmarkButton post={post} userId={userId} />
       </Link>
+        <BookmarkButton post={post} userId={userId} />  
     </div>
   );
 };

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React from "react";
 import ActionIcon from "./ActionIcon";
 import { toast } from "sonner";
@@ -16,7 +16,7 @@ const ShareButton = ({ postId }: { postId: string }) => {
         });
       }}
     >
-      <Send className="ml-3 mt-1"/>
+      <Send />
     </ActionIcon>
   );
 };

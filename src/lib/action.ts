@@ -142,7 +142,7 @@ export async function likePost(value: FormDataEntryValue | null) {
 }
 
 
-export async function bookmarkButton(value: FormDataEntryValue | null) {
+export async function bookmarkPost(value: FormDataEntryValue | null) {
     const userId = await getUserId()
     const validatedFields = BookmarkSchema.safeParse({ postId: value })
 
