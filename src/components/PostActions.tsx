@@ -13,12 +13,12 @@ const PostActions = ({
   post: PostWithExtras;
   userId?: string;
   className?: string;
-}) => { 
+}) => {
   return (
     <div className={cn("relative flex items-center w-full gap-x-2", className)}>
       <LikeButton post={post} userId={userId} />
       <Link href={`/dashboard/p/${post.id}`}>
-      {/* <ActionIcon>
+        {/* <ActionIcon>
           <MessageCircle className="h-6 w-6"/>
       </ActionIcon>
       <ShareButton postId={post.id}/>

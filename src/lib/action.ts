@@ -1,7 +1,7 @@
 'use server'
 import { revalidatePath } from "next/cache"
 import prisma from "./prisma"
-import { CreatePost, DeletePost } from "./schemas"
+import { CreatePost, DeletePost, LikeSchema } from "./schemas"
 import { getUserId } from "./utils"
 import { z } from 'zod'
 import { redirect } from "next/navigation"
@@ -73,4 +73,70 @@ export async function deletePost(formData: FormData) {
     } catch (error) {
         return { messsage: 'datebase Error: failed to delete post' }
     }
+}
+
+
+export async function likePost(value: FormDataEntryValue | null) {
+    const userId = await getUserId()
+
+    const validatedFields = LikeSchema.safeParse({ postId: value })
+
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: "Missing Fields. Failed to Like Post"
+        }
+    }
+
+    const { postId } = validatedFields.data
+
+    const post = await prisma.post.findUnique({
+        where: {
+            id: postId
+        }
+    })
+
+    if (!post) {
+        throw new Error("Post not found")
+    }
+
+    const like = await prisma.like.findUnique({
+        where: {
+            postId_userId: {
+                postId,
+                userId
+            }
+        }
+    })
+
+    if (like) {
+        try {
+            await prisma.like.delete({
+                where: {
+                    postId_userId: {
+                        postId,
+                        userId
+                    }
+                }
+            })
+            revalidatePath('/dashboard')
+            return { message: "Unliked Post" }
+        } catch (error) {
+            return { message: "database Error: failed to unlike Post" }
+        }
+    }
+
+    try {
+        await prisma.like.create({
+            data: {
+                postId,
+                userId
+            }
+        })
+        revalidatePath('/dashboard')
+        return { message: "Liked post." }
+    } catch (error) {
+        return { message: "Database Error: Failed to Like Post" }
+    }
+
 }
