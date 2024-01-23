@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import Link from "next/link";
 import SubmitButton from "./SubmitButton";
+import { deletePost } from "@/lib/action";
 
 type Props = {
   post: PostWithExtras;

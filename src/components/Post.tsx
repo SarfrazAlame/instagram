@@ -4,12 +4,16 @@ import { auth } from "../../auth";
 import UserAvatar from "./UserAvatar";
 import Timestamp from "./Timestamp";
 import PostOptions from "./PostOptions";
+import { Card } from "./ui/card";
+import Image from "next/image";
+import PostActions from "./PostActions";
+import Link from "next/link";
+import Comments from "./Comments";
 
-const Post = async ({ post }: { post: PostWithExtras }) => {
+async function Post({ post }: { post: PostWithExtras }) {
   const session = await auth();
   const userId = session?.user?.id;
-
-  const { username } = post.user;
+  const username = post.user.username;
 
   if (!session?.user) return null;
 
@@ -21,20 +25,48 @@ const Post = async ({ post }: { post: PostWithExtras }) => {
           <div className="text-sm">
             <p className="space-x-1">
               <span className="font-semibold">{username}</span>
-              <span className="font-medium text-neutral-500 dark:text-neutral-400 text-sm">
-                .
+              <span
+                className="font-medium text-neutral-500 dark:text-neutral-400
+                        text-xs
+                      "
+              >
+                •
               </span>
               <Timestamp createdAt={post.createdAt} />
             </p>
-
-            <p>India, Bihar Gopalganj</p>
+            <p className="text-xs text-black dark:text-white font-medium">
+              Dubai, United Arab Emirates
+            </p>
           </div>
         </div>
-
         <PostOptions post={post} userId={userId} />
       </div>
+
+      <Card className="relative h-[450px] w-full overflow-hidden rounded-none sm:rounded-md">
+        <Image
+          src={post.fileUrl}
+          alt="post image"
+          fill
+          className="sm:rounded-md object-cover"
+        />
+      </Card>
+      <PostActions post={post} userId={userId} className="px-3 sm:px-0" />
+
+      {/* post caption &&  */}
+
+      {post.caption && (
+        <div className="text-sm leading-none flex items-center space-x-2 font-medium px-3 sm:px-0">
+          <Link className="font-bold" href={`/dashboard/${username}`}>
+            {username}
+          </Link>
+
+          <p>{post.caption}</p>
+        </div>
+      )}
+
+      {/* <Comments postId={post.id} comments={post.comments} userId={userId} /> */}
     </div>
   );
-};
+}
 
 export default Post;

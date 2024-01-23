@@ -4,7 +4,6 @@ import Post from "./Post";
 
 const Posts = async () => {
   const posts = await fetchPosts();
-
   return (
     <>
       {posts.map((post) => (

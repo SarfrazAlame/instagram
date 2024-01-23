@@ -43,11 +43,34 @@ export default async function createPost(values: z.infer<typeof CreatePost>) {
     redirect('/dashboard')
 }
 
-export default async function deletePost(formData:FormData){
+
+
+export async function deletePost(formData: FormData) {
     const userId = await getUserId()
-    const {id} = DeletePost.parse({
-        id:formData.get('id')
+    const { id } = DeletePost.parse({
+        id: formData.get('id')
     })
 
-    
+    const post = await prisma.post.findUnique({
+        where: {
+            id,
+            userId
+        }
+    })
+
+    if (!post) {
+        throw new Error("Post not found")
+    }
+
+    try {
+        await prisma.post.delete({
+            where: {
+                id
+            }
+        })
+        revalidatePath('/dashboard')
+        return { message: "Delete Post." }
+    } catch (error) {
+        return { messsage: 'datebase Error: failed to delete post' }
+    }
 }
