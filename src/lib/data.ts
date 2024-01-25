@@ -1,5 +1,5 @@
 import { unstable_noStore as noStore } from "next/cache";
-import prisma from "./prisma";
+import {prisma} from "./prisma";
 
 export async function fetchPosts() {
     noStore()
@@ -34,3 +34,40 @@ export async function fetchPosts() {
         throw new Error("Failed to fetch posts")
     }
 }
+
+
+export async function fetchPostById(id: string) {
+    noStore();
+  
+    try {
+      const data = await prisma.post.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          comments: {
+            include: {
+              user: true,
+            },
+            orderBy: {
+              createdAt: "desc",
+            },
+          },
+          likes: {
+            include: {
+              user: true,
+            },
+          },
+          savedBy: true,
+          user: true,
+        },
+      });
+
+     console.log(data)
+      return data;
+    } catch (error) {
+      console.error("Database Error:", error);
+      throw new Error("Failed to fetch post");
+    }
+  }
+  
