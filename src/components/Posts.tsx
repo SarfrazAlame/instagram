@@ -7,7 +7,7 @@ const Posts = async () => {
   return (
     <>
       {posts.map((post) => (
-        <Post key={post.id} post={post} />
+        <Post key={post.id} post={post}/>
       ))}
     </>
   );

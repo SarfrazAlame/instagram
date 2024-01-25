@@ -5,10 +5,12 @@ import { CreateComment } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "next-auth";
 import Link from "next/link";
-import React, { useOptimistic } from "react";
+import React, { startTransition, useOptimistic } from "react";
 import { useForm } from "react-hook-form";
-import { string, z } from "zod";
+import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
+import { createComment } from "@/lib/action";
+import { Comment } from "@prisma/client";
 
 const Comments = ({
   postId,
@@ -32,7 +34,7 @@ const Comments = ({
     comments,
     // @ts-ignore
     (state: Comment[], newComment: string) => [
-      { body: newComment, userId: user?.id, postId, user },
+      { body: newComment, userId: user, postId, user },
       ...state,
     ]
   );
@@ -53,7 +55,8 @@ const Comments = ({
       )}
 
       {optimisticComments.slice(0, 3).map((comment, i) => {
-        const { username } = comment.user;
+        const username = comment.user?.username;
+
         return (
           <div
             key={i}
@@ -62,13 +65,26 @@ const Comments = ({
             <Link href={`/dashboard/${username}`} className="font-semibold">
               {username}
             </Link>
-            <p>{comment.body}</p>
+            <p className="text-sm  text-black dark:text-gray-200">
+              {comment.body}
+            </p>
           </div>
         );
       })}
 
       <Form {...form}>
-        <form className="border-b border-gray-300 dark:border-neutral-800 pb-3 py-1 flex items-center space-x-2">
+        <form
+          onSubmit={form.handleSubmit(async (values) => {
+            const valuesCopy = { ...values };
+            form.reset();
+            startTransition(() => {
+              addOptimisticComment(valuesCopy.body);
+            });
+
+            await createComment(valuesCopy);
+          })}
+          className="border-b border-gray-300 dark:border-neutral-800 pb-3 py-1 flex items-center space-x-2"
+        >
           <FormField
             control={form.control}
             name="body"
@@ -80,22 +96,21 @@ const Comments = ({
                     placeholder="Add a comment..."
                     className="bg-transparent text-sm border-none focus:outline-none flex-1 placeholder-neutral-500
                 dark:text-white dark:placeholder-neutral-400 font-medium"
+                    {...field}
                   />
                 </FormControl>
-                <FormMessage/>
+                <FormMessage />
               </FormItem>
             )}
           />
 
-          {body.trim().length > 0 && (
-            <button
-              type="submit"
-              className="text-sky-500 text-sm font-semibold hover:text-white disabled:hover:text-sky-500 disabled:cursor-not-allowed"
-            >
-              Post
-            </button>
-          )}
-        </form> 
+          <button
+            type="submit"
+            className="text-sky-500 text-sm font-semibold hover:text-gray-700 dark:hover: disabled:hover:text-sky-500 disabled:cursor-not-allowed"
+          >
+            Post
+          </button>
+        </form>
       </Form>
     </div>
   );
