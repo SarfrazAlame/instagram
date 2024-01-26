@@ -12,10 +12,11 @@ type Props = {
 async function PostModal({ params: { id } }: Props) {
   const post = await fetchPostById(id);
 
+  console.log(post);
+
   if (!post) {
     throw new Error("not foundsd");
   }
-  console.log(post)
 
   return <PostView id={id} post={post} />;
 }

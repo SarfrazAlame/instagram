@@ -40,7 +40,7 @@ export async function fetchPostById(id: string) {
   noStore();
 
   try {
-    const data1 = await prisma.post.findUnique({
+    const data = await prisma.post.findUnique({
       where: {
         id,
       },
@@ -63,10 +63,12 @@ export async function fetchPostById(id: string) {
       },
     });
 
-    return data1
+    console.log()
+
+    return data
 
   } catch (error) {
-    console.error("Database Error:", error);
+    console.error("Database Error", error);
     throw new Error("Failed to fetch post");
   }
 }

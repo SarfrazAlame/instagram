@@ -22,6 +22,8 @@ const PostView = ({ id, post }: { id: string; post: PostWithExtras }) => {
 
   if (!mount) return null;
 
+  console.log(post);
+
   return (
     <Dialog open={isPostModal} onOpenChange={(open) => !open && router.back()}>
       <DialogContent className="flex gap-0 flex-col md:flex-row items-start ">
@@ -29,6 +31,9 @@ const PostView = ({ id, post }: { id: string; post: PostWithExtras }) => {
           <DialogHeader className="flex border-b space-y-0 space-x-2.5 flex-row items-center py-4 pl-3.5 pr-6">
             <Link href={href}>
               <UserAvatar user={post.user} />
+            </Link>
+            <Link href={href} className="font-semibold text-sm">
+              {username}
             </Link>
           </DialogHeader>
 

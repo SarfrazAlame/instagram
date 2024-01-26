@@ -1,6 +1,6 @@
 'use server'
 import { revalidatePath } from "next/cache"
-import prisma from "./prisma"
+import {prisma} from "./prisma"
 import { BookmarkSchema, CreateComment, CreatePost, DeletePost, LikeSchema } from "./schemas"
 import { getUserId } from "./utils"
 import { z } from 'zod'
