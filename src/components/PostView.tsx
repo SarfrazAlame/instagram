@@ -8,6 +8,7 @@ import UserAvatar from "./UserAvatar";
 import { useSession } from "next-auth/react";
 import { useMount } from "@/hooks/useMount";
 import { ScrollArea } from "./ui/scroll-area";
+import MiniPost from "./MiniPost";
 
 const PostView = ({ id, post }: { id: string; post: PostWithExtras }) => {
   const pathname = usePathname();
@@ -22,11 +23,12 @@ const PostView = ({ id, post }: { id: string; post: PostWithExtras }) => {
 
   if (!mount) return null;
 
-  console.log(post);
-
   return (
     <Dialog open={isPostModal} onOpenChange={(open) => !open && router.back()}>
-      <DialogContent className="flex gap-0 flex-col md:flex-row items-start ">
+      <DialogContent
+        className="flex gap-0 flex-col md:flex-row items-start p-0 md:max-w-3xl lg:max-w-5xl 
+      xl:max-w-6xl h-full max-h-[500px] lg:max-h-[700px] xl:max-h-[800px]"
+      >
         <div className="flex flex-col justify-between md:h-full md:order-2 w-full max-w-md ">
           <DialogHeader className="flex border-b space-y-0 space-x-2.5 flex-row items-center py-4 pl-3.5 pr-6">
             <Link href={href}>
@@ -37,7 +39,9 @@ const PostView = ({ id, post }: { id: string; post: PostWithExtras }) => {
             </Link>
           </DialogHeader>
 
-          <ScrollArea></ScrollArea>
+          <ScrollArea className="hidden md:inline border-b flex-1 py-1.5">
+            <MiniPost post={post}/>
+          </ScrollArea>
         </div>
       </DialogContent>
     </Dialog>

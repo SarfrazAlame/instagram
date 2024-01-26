@@ -1,6 +1,6 @@
-"use client";
 import PostView from "@/components/PostView";
 import { fetchPostById } from "@/lib/data";
+import { notFound } from "next/navigation";
 import React from "react";
 
 type Props = {
@@ -10,12 +10,11 @@ type Props = {
 };
 
 async function PostModal({ params: { id } }: Props) {
+
   const post = await fetchPostById(id);
 
-  console.log(post);
-
   if (!post) {
-    throw new Error("not foundsd");
+    return notFound()
   }
 
   return <PostView id={id} post={post} />;
