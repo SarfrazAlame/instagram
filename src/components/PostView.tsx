@@ -9,6 +9,10 @@ import { useSession } from "next-auth/react";
 import { useMount } from "@/hooks/useMount";
 import { ScrollArea } from "./ui/scroll-area";
 import MiniPost from "./MiniPost";
+import Comment from "./Comment";
+import ViewPost from "./ViewPost";
+import PostActions from "./PostActions";
+import CommentForm from "./CommentForm";
 
 const PostView = ({ id, post }: { id: string; post: PostWithExtras }) => {
   const pathname = usePathname();
@@ -40,8 +44,35 @@ const PostView = ({ id, post }: { id: string; post: PostWithExtras }) => {
           </DialogHeader>
 
           <ScrollArea className="hidden md:inline border-b flex-1 py-1.5">
-            <MiniPost post={post}/>
+            <MiniPost post={post} />
+            {post.comments.length > 0 && (
+              <>
+                {post.comments.map((comment) => {
+                  return (
+                    <Comment
+                      key={comment.id}
+                      comment={comment}
+                      inputRef={inputRef}
+                    />
+                  );
+                })}
+              </>
+            )}
           </ScrollArea>
+
+          <ViewPost className="hidden md:flex border-b" />
+
+          <div className="px-2 hidden md:block mt-auto border-b p-2.5">
+            <PostActions post={post} userId={user?.id} />
+
+            <time className="text-[11px] uppercase text-zinc-500 font-medium">
+              {new Date(post.createdAt).toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+              })}
+            </time>
+          </div>
+          <CommentForm postId={id} className='hidden md:inline-flex' inputRef={inputRef}/>
         </div>
       </DialogContent>
     </Dialog>

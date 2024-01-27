@@ -6,7 +6,6 @@ import UserAvatar from "./UserAvatar";
 import { useSession } from "next-auth/react";
 import Timestamp from "./Timestamp";
 import PostOptions from "./PostOptions";
-import Comment from "./Comment";
 
 const MiniPost = ({ post }: { post: PostWithExtras }) => {
   const { username } = post.user;
@@ -35,19 +34,6 @@ const MiniPost = ({ post }: { post: PostWithExtras }) => {
             userId={user.id}
             className="hidden group-hover:inline"
           />
-          {post.comments.length > 0 && (
-            <>
-              {post.comments.map((comment) => {
-                return (
-                  <Comment
-                    key={comment.id}
-                    comment={comment}
-                    inputRef={inputRef}
-                  />
-                );
-              })}
-            </>
-          )}
         </div>
       </div>
     </div>

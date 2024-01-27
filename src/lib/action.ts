@@ -1,7 +1,7 @@
 'use server'
 import { revalidatePath } from "next/cache"
 import {prisma} from "./prisma"
-import { BookmarkSchema, CreateComment, CreatePost, DeletePost, LikeSchema } from "./schemas"
+import { BookmarkSchema, CreateComment, CreatePost, DeleteComment, DeletePost, LikeSchema } from "./schemas"
 import { getUserId } from "./utils"
 import { z } from 'zod'
 import { redirect } from "next/navigation"
@@ -248,5 +248,35 @@ export async function createComment(values: z.infer<typeof CreateComment>) {
         return {
             message: "Database Error: Failed to Create Comment"
         }
+    }
+}
+
+export async function deleteComment(formData:FormData){
+    const userId = await getUserId()
+
+    const {id} = DeleteComment.parse({
+        id:formData.get('id')
+    })
+
+    const comment = await prisma.comment.findUnique({
+        where:{
+            id,
+            userId
+        }
+    })
+
+    if(!comment){
+        throw new Error("Comment not found")
+    }
+    try {
+        await prisma.comment.delete({
+            where:{
+                id
+            }
+        })
+        revalidatePath('/dashboard')
+        return {message:"Comment deleted"}
+    } catch (error) {
+        return {message:"database Error: failed to delete comment"}
     }
 }

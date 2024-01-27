@@ -24,19 +24,20 @@ const Comment = ({ comment, inputRef }: Props) => {
       </Link>
       <div className="space-y-1.5">
         <div className="flex items-center space-x-1.5 leading-none text-sm">
-            <Link href={href}>
-                {username}
-            </Link>
-            <p className="font-semibold">{comment.body}</p>
+          <Link href={href}>{username}</Link>
+          <p className="font-semibold">{comment.body}</p>
         </div>
         <div className="flex h-5 items-center space-x-2.5">
-            <Timestamp createdAt={comment.createdAt}/>
-            <button className="text-xs font-semibold text-neutral-500" onClick={()=>inputRef.current?.focus()}>
-                Reply
-            </button>
-            {comment.userId === session?.user.id &&(
-                <CommentOptions comment={comment}/>
-            )}
+          <Timestamp createdAt={comment.createdAt} />
+          <button
+            className="text-xs font-semibold text-neutral-500"
+            onClick={() => inputRef.current?.focus()}
+          >
+            Reply
+          </button>
+          {comment.userId === session?.user.id && (
+            <CommentOptions comment={comment} />
+          )}
         </div>
       </div>
     </div>

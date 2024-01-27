@@ -22,7 +22,7 @@ const PostOptions = ({ post, userId, className }: Props) => {
     <Dialog>
       <DialogTrigger asChild>
         <MoreHorizontal
-          className={cn("h-5 w-5 cursor-pointer dark:text-neutral-400")}
+          className={cn("h-5 w-5 cursor-pointer dark:text-neutral-400", className)}
         />
       </DialogTrigger>
       <DialogContent className="dialogContent">
