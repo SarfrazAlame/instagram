@@ -9,7 +9,7 @@ import CommentOptions from "./CommentOptions";
 
 type Props = {
   comment: CommentWithExtras;
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef?: React.RefObject<HTMLInputElement>;
 };
 
 const Comment = ({ comment, inputRef }: Props) => {
@@ -31,7 +31,7 @@ const Comment = ({ comment, inputRef }: Props) => {
           <Timestamp createdAt={comment.createdAt} />
           <button
             className="text-xs font-semibold text-neutral-500"
-            onClick={() => inputRef.current?.focus()}
+            onClick={() => inputRef?.current?.focus()}
           >
             Reply
           </button>

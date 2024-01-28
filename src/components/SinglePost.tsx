@@ -11,6 +11,9 @@ import PostOptions from "./PostOptions";
 import { ScrollArea } from "./ui/scroll-area";
 import MiniPost from "./MiniPost";
 import Comment from "./Comment";
+import PostActions from "./PostActions";
+import CommentForm from "./CommentForm";
+import Post from "./Post";
 
 const SinglePost = async ({ id }: { id: string }) => {
   const post = await fetchPostById(id);
@@ -71,12 +74,27 @@ const SinglePost = async ({ id }: { id: string }) => {
             <ScrollArea className="hidden md:inline py-1.5 flex-1">
                 <MiniPost post={post}/>
                 {post.comments.map((comment)=>(
-                    <Comment key={comment.id} comment={comment}/>
+                    <Comment key={comment.id} comment={comment} />
                 ))}
             </ScrollArea>
           )}
+
+          <div className="px-2 hidden md:block mt-auto border-y p-2.5">
+            <PostActions post={post} userId={userId}/>
+            <time className="text-[11px] uppercase text-zinc-500 font-medium">
+              {new Date(post.createdAt).toLocaleString('en-US',{
+                month:'long',
+                day:"numeric"
+              })}
+            </time>
+          </div>
+          <CommentForm postId={id} className="hidden md:inline-flex"/>
         </div>
       </Card>
+
+      <div className="md:hidden">
+        <Post post={post}/>
+      </div>
     </>
   );
 };

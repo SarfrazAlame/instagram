@@ -1,3 +1,4 @@
+'use client'
 import { CreateComment } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
