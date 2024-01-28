@@ -1,5 +1,7 @@
 import { fetchPostById, fetchPostsByUsername } from '@/lib/data'
+import Link from 'next/link'
 import React from 'react'
+import PostGrid from './PostGrid'
 
 const MorePosts = async({postId}:{postId:string}) => {
 
@@ -8,7 +10,14 @@ const MorePosts = async({postId}:{postId:string}) => {
     const posts = await fetchPostsByUsername(postUsername!,postId)
 
   return (
-    <div>MorePosts</div>
+    <div className='flex flex-col space-y-3 max-w-3xl lg:max-w-4xl mx-auto pb-20'>
+        <p className='font-semibold text-sm text-neutral-600 dark:text-neutral-400'>
+            More Posts from {" "}
+            <Link href={`/dashboard/${postUsername}`} className='dark:text-white text-black hover:opacity-50'>{postUsername}</Link>
+        </p>
+
+        <PostGrid posts={posts}/>
+    </div>
   )
 }
 
