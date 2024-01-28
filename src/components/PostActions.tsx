@@ -26,7 +26,7 @@ const PostActions = ({
         </ActionIcon>
         <ShareButton postId={post.id} />
       </Link>
-        <BookmarkButton post={post} userId={userId} />  
+      <BookmarkButton post={post} userId={userId} />
     </div>
   );
 };

@@ -13,6 +13,7 @@ import Comment from "./Comment";
 import ViewPost from "./ViewPost";
 import PostActions from "./PostActions";
 import CommentForm from "./CommentForm";
+import Image from "next/image";
 
 const PostView = ({ id, post }: { id: string; post: PostWithExtras }) => {
   const pathname = usePathname();
@@ -72,8 +73,29 @@ const PostView = ({ id, post }: { id: string; post: PostWithExtras }) => {
               })}
             </time>
           </div>
-          <CommentForm postId={id} className='hidden md:inline-flex' inputRef={inputRef}/>
+          <CommentForm
+            postId={id}
+            className="hidden md:inline-flex"
+            inputRef={inputRef}
+          />
         </div>
+
+        <div className="relative overflow-hidden h-96 md:h-[500px] lg:h-[700px] xl:h-[800px] max-w-3xl w-full">
+          <Image
+            src={post.fileUrl}
+            fill
+            objectFit="cover"
+            alt="post image"
+            className="md:rounded-l-md object-cover"
+          />
+        </div>
+        <PostActions
+          post={post}
+          userId={user?.id}
+          className="md:hidden border-b p-2.5"
+        />
+        <CommentForm postId={id} className="md:hidden" inputRef={inputRef}/>
+        <ViewPost className="md:hidden"/>
       </DialogContent>
     </Dialog>
   );
