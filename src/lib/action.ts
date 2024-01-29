@@ -1,10 +1,11 @@
 'use server'
 import { revalidatePath } from "next/cache"
-import {prisma} from "./prisma"
-import { BookmarkSchema, CreateComment, CreatePost, DeleteComment, DeletePost, LikeSchema } from "./schemas"
+import { prisma } from "./prisma"
+import { BookmarkSchema, CreateComment, CreatePost, DeleteComment, DeletePost, LikeSchema, UpdatePost } from "./schemas"
 import { getUserId } from "./utils"
 import { z } from 'zod'
 import { redirect } from "next/navigation"
+import clsx from "clsx"
 
 export default async function createPost(values: z.infer<typeof CreatePost>) {
     const userId = await getUserId()
@@ -251,32 +252,76 @@ export async function createComment(values: z.infer<typeof CreateComment>) {
     }
 }
 
-export async function deleteComment(formData:FormData){
+export async function deleteComment(formData: FormData) {
     const userId = await getUserId()
 
-    const {id} = DeleteComment.parse({
-        id:formData.get('id')
+    const { id } = DeleteComment.parse({
+        id: formData.get('id')
     })
 
     const comment = await prisma.comment.findUnique({
-        where:{
+        where: {
             id,
             userId
         }
     })
 
-    if(!comment){
+    if (!comment) {
         throw new Error("Comment not found")
     }
     try {
         await prisma.comment.delete({
-            where:{
+            where: {
                 id
             }
         })
         revalidatePath('/dashboard')
-        return {message:"Comment deleted"}
+        return { message: "Comment deleted" }
     } catch (error) {
-        return {message:"database Error: failed to delete comment"}
+        return { message: "database Error: failed to delete comment" }
     }
+}
+
+export async function updatePost(values: z.infer<typeof UpdatePost>) {
+    const userId = await getUserId()
+
+    const validatedFields = UpdatePost.safeParse(values)
+
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: "Missing fields. failed to update post"
+        }
+    }
+
+    const { id, fileUrl, caption } = validatedFields.data
+
+    const post = await prisma.post.findUnique({
+        where: {
+            id,
+            userId
+        }
+    })
+
+    if (!post) {
+        throw new Error("Post not found")
+    }
+
+    try {
+        await prisma.post.update({
+            where: {
+                id
+            },
+            data: {
+                fileUrl,
+                caption
+            }
+        })
+
+    } catch (error) {
+        return { message: "database error: Failed to Update Post" }
+    }
+
+    revalidatePath("/dashboard")
+    redirect("/dashboard")
 }
