@@ -21,6 +21,8 @@ export const ourFileRouter = {
 
             return { uploadedBy: metadata.userId };
         }),
+
+    // you can have video uploader herer
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

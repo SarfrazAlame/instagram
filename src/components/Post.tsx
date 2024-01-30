@@ -21,10 +21,15 @@ async function Post({ post }: { post: PostWithExtras }) {
     <div className="flex flex-col space-y-2.5">
       <div className="flex items-center justify-between px-3 sm:px-0">
         <div className="flex space-x-3 items-center">
-          <UserAvatar user={post.user} />
+          <Link href={`/dashboard/${username}`}>
+            <UserAvatar user={post.user} />
+          </Link>
           <div className="text-sm">
             <p className="space-x-1">
-              <span className="font-semibold">{username}</span>
+              <Link href={`/dashboard/${username}`}>
+                <span className="font-semibold">{username}</span>
+              </Link>
+
               <span
                 className="font-medium text-neutral-500 dark:text-neutral-400
                         text-xs
@@ -35,7 +40,7 @@ async function Post({ post }: { post: PostWithExtras }) {
               <Timestamp createdAt={post.createdAt} />
             </p>
             <p className="text-xs text-black dark:text-white font-medium">
-              Dubai, United Arab Emirates
+              Bihar, Gopalganj Sher
             </p>
           </div>
         </div>

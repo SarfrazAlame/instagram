@@ -166,3 +166,46 @@ export async function fetchProfile(username: string) {
     throw new Error("failed to fetch profile")
   }
 }
+
+
+export async function fetchSavedPostsByUsername(username: string) {
+  noStore()
+
+  try {
+    const data = await prisma.savedPost.findMany({
+      where: {
+        user: {
+          username
+        }
+      },
+      include: {
+        post: {
+          include: {
+            comments: {
+              include: {
+                user: true
+              },
+              orderBy: {
+                createdAt: "desc"
+              }
+            },
+            likes: {
+              include: {
+                user: true
+              }
+            },
+            savedBy: true,
+            user: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: "desc"
+      }
+    })
+    return data
+  } catch (error) {
+    console.error("database Error:", error)
+    throw new Error('failed to fetch  saved posts')
+  }
+}

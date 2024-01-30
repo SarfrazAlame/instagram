@@ -1,7 +1,7 @@
 'use server'
 import { revalidatePath } from "next/cache"
 import { prisma } from "./prisma"
-import { BookmarkSchema, CreateComment, CreatePost, DeleteComment, DeletePost, LikeSchema, UpdatePost, UpdateUser } from "./schemas"
+import { BookmarkSchema, CreateComment, CreatePost, DeleteComment, DeletePost, FollowUser, LikeSchema, UpdatePost, UpdateUser } from "./schemas"
 import { getUserId } from "./utils"
 import { z } from 'zod'
 import { redirect } from "next/navigation"
@@ -326,25 +326,25 @@ export async function updatePost(values: z.infer<typeof UpdatePost>) {
     redirect("/dashboard")
 }
 
-export async function updateProfile(values:z.infer<typeof UpdateUser>){
-    const userId  = await getUserId()
+export async function updateProfile(values: z.infer<typeof UpdateUser>) {
+    const userId = await getUserId()
 
     const validatedFields = UpdateUser.safeParse(values)
 
-    if(!validatedFields.success){
+    if (!validatedFields.success) {
         return {
-            errors:validatedFields.error.flatten().fieldErrors,
-            message:"Missing fields. Failed to Update Profile"
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: "Missing fields. Failed to Update Profile"
         }
     }
-    const {bio,gender,image, name,username,website} = validatedFields.data
+    const { bio, gender, image, name, username, website } = validatedFields.data
 
     try {
         await prisma.user.update({
-            where:{
-                id:userId
+            where: {
+                id: userId
             },
-            data:{
+            data: {
                 username,
                 name,
                 bio,
@@ -354,9 +354,70 @@ export async function updateProfile(values:z.infer<typeof UpdateUser>){
             }
         })
         revalidatePath('/dashboard')
-        return {message:"Updated Profile"}
+        return { message: "Updated Profile" }
     } catch (error) {
-        return {message:"database error: Failed to Update Profile"}
+        return { message: "database error: Failed to Update Profile" }
     }
 
+}
+
+
+export async function followUser(formData: FormData) {
+    const userId = await getUserId()
+
+    const { id } = FollowUser.parse({ id: formData.get("id") })
+
+    const user = await prisma.user.findUnique({
+        where: {
+            id
+        }
+    });
+
+    if (!user) {
+        throw new Error('User not found')
+    }
+
+    const follows = await prisma.follows.findUnique({
+        where: {
+            followerId_followingId: {
+                // followerId is of the person who wants to follow
+                followerId: userId,
+                // followingId is of the person who is being followed
+                followingId: id
+            }
+        }
+    })
+
+    if (follows) {
+        try {
+            await prisma.follows.delete({
+                where: {
+                    followerId_followingId: {
+                        followerId: userId,
+                        followingId: id
+                    }
+                }
+            })
+            revalidatePath('/dashboard')
+            return { message: "Unfollowed User" }
+        } catch (error) {
+            return {
+                message: "Database Error: Failed to Unfollow User"
+            }
+        }
+    }
+
+    try {
+        await prisma.follows.create({
+            data: {
+                followerId: userId,
+                followingId: id
+            }
+        })
+        revalidatePath('/dashboard')
+    } catch (error) {
+        return {
+            message: "Database Error: failed to Follow User"
+        }
+    }
 }
