@@ -1,7 +1,7 @@
 'use server'
 import { revalidatePath } from "next/cache"
 import { prisma } from "./prisma"
-import { BookmarkSchema, CreateComment, CreatePost, DeleteComment, DeletePost, LikeSchema, UpdatePost } from "./schemas"
+import { BookmarkSchema, CreateComment, CreatePost, DeleteComment, DeletePost, LikeSchema, UpdatePost, UpdateUser } from "./schemas"
 import { getUserId } from "./utils"
 import { z } from 'zod'
 import { redirect } from "next/navigation"
@@ -324,4 +324,39 @@ export async function updatePost(values: z.infer<typeof UpdatePost>) {
 
     revalidatePath("/dashboard")
     redirect("/dashboard")
+}
+
+export async function updateProfile(values:z.infer<typeof UpdateUser>){
+    const userId  = await getUserId()
+
+    const validatedFields = UpdateUser.safeParse(values)
+
+    if(!validatedFields.success){
+        return {
+            errors:validatedFields.error.flatten().fieldErrors,
+            message:"Missing fields. Failed to Update Profile"
+        }
+    }
+    const {bio,gender,image, name,username,website} = validatedFields.data
+
+    try {
+        await prisma.user.update({
+            where:{
+                id:userId
+            },
+            data:{
+                username,
+                name,
+                bio,
+                gender,
+                image,
+                website
+            }
+        })
+        revalidatePath('/dashboard')
+        return {message:"Updated Profile"}
+    } catch (error) {
+        return {message:"database error: Failed to Update Profile"}
+    }
+
 }

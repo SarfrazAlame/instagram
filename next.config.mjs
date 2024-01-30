@@ -12,7 +12,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "instagram.fpnq13-1.fna.fbcdn.net",
+        hostname: "tse3.mm.bing.net",
       },
     ],
   },

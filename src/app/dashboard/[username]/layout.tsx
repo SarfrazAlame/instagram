@@ -50,6 +50,19 @@ export async function ProfileLayout({ children, params: { username } }: Props) {
               className="w-20 h-20 md:w-36 md:h-36 cursor-pointer"
             />
           </ProfileAvatar>
+          <div className="md:px-10 space-y-4">
+            <div className="grid grid-cols-2 md:grid-clos-4 items-center gap-3">
+              <p className="font-semibold text-xl">{profile.username}</p>
+              {isCurrrentUser?(
+                <>
+                
+                </>
+              ):(
+                <>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </div>
       {children}
