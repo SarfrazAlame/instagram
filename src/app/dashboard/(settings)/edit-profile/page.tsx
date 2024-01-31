@@ -6,24 +6,25 @@ import { notFound } from "next/navigation";
 import ProfileForm from "@/components/ProfileForm";
 
 export const metadata: Metadata = {
-  title:"Edit Profile",
-  description:"Edit Profile"
-}
+  title: "Edit Profile",
+  description: "Edit Profile",
+};
 
+const EditProfile = async () => {
+  const session = await auth();
+  const profile = await fetchProfile(session.user.username);
 
-const EditProfile = async() => {
-  const session = await auth()
-  const profile = await fetchProfile(session.user.username)
-
-  if(!profile){
-    notFound()
+  if (!profile) {
+    notFound();
   }
 
-  return <div className="px-12">
-    <h1 className="text-2xl font-medium">Edit Profile</h1>
+  return (
+    <div className="px-12">
+      <h1 className="text-2xl font-medium">Edit Profile</h1>
 
-    <ProfileForm profile={profile}/>
-  </div>;
+      <ProfileForm profile={profile} />
+    </div>
+  );
 };
 
 export default EditProfile;
