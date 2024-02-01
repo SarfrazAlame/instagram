@@ -1,15 +1,16 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import {prisma} from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import GoogleProvider from "next-auth/providers/google";
-import NextAuth, { type NextAuthOptions } from "next-auth";
-import { getServerSession } from "next-auth/next"
+import NextAuth from "next-auth/next";
+import { getServerSession } from 'next-auth/next'
+import { NextAuthOptions } from "next-auth";
 
+ 
 import {
   GetServerSidePropsContext,
   NextApiRequest,
   NextApiResponse,
 } from "next";
-
 
 export const config = {
   pages: {
@@ -54,7 +55,7 @@ export const config = {
             id: prismaUser.id,
           },
           data: {
-            username: prismaUser.username?.split(" ").join("").toLowerCase(),
+            username: prismaUser.name?.split(" ").join("").toLowerCase(),
           },
         });
       }
@@ -68,7 +69,7 @@ export const config = {
       };
     },
   },
-} satisfies NextAuthOptions;
+} satisfies NextAuthOptions
 
 export default NextAuth(config);
 
