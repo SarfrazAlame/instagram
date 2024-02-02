@@ -1,16 +1,17 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth/next";
+import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/lib/prisma";
 import GoogleProvider from "next-auth/providers/google";
-import NextAuth from "next-auth/next";
 import { getServerSession } from 'next-auth/next'
-import { NextAuthOptions } from "next-auth";
 
- 
+
 import {
   GetServerSidePropsContext,
   NextApiRequest,
   NextApiResponse,
 } from "next";
+
 
 export const config = {
   pages: {

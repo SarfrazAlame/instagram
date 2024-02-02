@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
+import { config } from "../../auth";
 
-export default function Home() {
+export default async function Home() {
+  
   redirect("/dashboard")
 }
