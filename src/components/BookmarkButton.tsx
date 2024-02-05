@@ -6,7 +6,7 @@ import React, { useOptimistic } from "react";
 import ActionIcon from "./ActionIcon";
 import { cn } from "@/lib/utils";
 import { Bookmark } from "lucide-react";
-import { bookmarkButton, bookmarkPost } from "@/lib/action";
+import { bookmarkPost } from "@/lib/action";
 
 type Props = {
   post: PostWithExtras;

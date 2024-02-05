@@ -66,7 +66,7 @@ const ProfileAvatar = ({
               onSubmit={form.handleSubmit(async (values) => {
                 const { message } = await updateProfile(values);
                 toast(message);
-                setOpen(message);
+                setOpen(true);
               })}
             >
               <FormField

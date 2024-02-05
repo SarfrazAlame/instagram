@@ -1,6 +1,6 @@
 import { PostWithExtras } from "@/lib/definitions";
 import React from "react";
-import { auth } from "../../auth";
+import { getAuthOptions } from "../lib/auth";
 import UserAvatar from "./UserAvatar";
 import Timestamp from "./Timestamp";
 import PostOptions from "./PostOptions";
@@ -11,7 +11,7 @@ import Link from "next/link";
 import Comments from "./Comments";
 
 async function Post({ post }: { post: PostWithExtras }) {
-  const session = await auth();
+  const session = await getAuthOptions();
   const userId = session?.user?.id;
   const username = post.user.username;
 

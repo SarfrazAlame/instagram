@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { auth } from "../../auth"
+import { getAuthOptions } from "./auth"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -8,8 +8,8 @@ export function cn(...inputs: ClassValue[]) {
 
 
 export const getUserId = async () => {
-  const session = await auth()
-  const userId = session.user.id
+  const session = await getAuthOptions()
+  const userId = session?.user.id
 
   if(!userId){
     throw new Error("You must be signed in to use this feature")

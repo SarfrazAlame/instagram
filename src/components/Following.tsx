@@ -26,7 +26,7 @@ function Following({ following }: { following: FollowingWithExtras }) {
       {!isCurrentUser && (
         <FollowButton
           profileId={following.followingId}
-          isFollowing={isFollowing}
+          isfollowing={isFollowing}
           buttonClassName={
             isFollowing ? "bg-neutral-700 dark:hover:bg-neutral-700/40" : ""
           }

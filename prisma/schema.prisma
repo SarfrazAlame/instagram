@@ -84,7 +84,7 @@ model Follows {
     @@id([followerId, followingId])
     @@index([followerId])
     @@index([followingId])
-}
+} 
 
 model Post {
     id        String      @id @default(cuid())

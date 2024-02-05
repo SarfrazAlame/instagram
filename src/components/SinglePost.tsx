@@ -1,6 +1,6 @@
 import { fetchPostById } from "@/lib/data";
 import React from "react";
-import { auth } from "../../auth";
+import {  getAuthOptions } from "../lib/auth";
 import { notFound } from "next/navigation";
 import { Card } from "./ui/card";
 import Image from "next/image";
@@ -17,9 +17,9 @@ import Post from "./Post";
 
 const SinglePost = async ({ id }: { id: string }) => {
   const post = await fetchPostById(id);
-  const session = await auth();
+  const session = await getAuthOptions();
   const postUsername = post?.user.username;
-  const userId = session.user.id;
+  const userId = session?.user.id;
 
   if (!post) {
     notFound();

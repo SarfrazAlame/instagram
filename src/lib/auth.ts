@@ -1,34 +1,26 @@
-import { NextAuthOptions } from "next-auth";
-import NextAuth from "next-auth/next";
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import { prisma } from "@/lib/prisma";
-import GoogleProvider from "next-auth/providers/google";
-import { getServerSession } from 'next-auth/next'
+import { db } from "@/lib/prisma";
+import GoogleProvider from "next-auth/providers/google"
+import { NextAuthOptions, getServerSession } from "next-auth";
+import {PrismaAdapter} from "@auth/prisma-adapter"
+import type { Adapter } from 'next-auth/adapters';
 
 
-import {
-  GetServerSidePropsContext,
-  NextApiRequest,
-  NextApiResponse,
-} from "next";
-
-
-export const config = {
+export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(db) as Adapter,
+  session: {
+    strategy: "jwt",
+  },
   pages: {
     signIn: "/login",
   },
-  adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
-  session: {
-    strategy: "jwt",
-  },
   callbacks: {
-    async session({ session, token }) {
+    session({ session, token }) {
       if (token) {
         session.user.id = token.id;
         session.user.name = token.name;
@@ -40,7 +32,7 @@ export const config = {
       return session;
     },
     async jwt({ token, user }) {
-      const prismaUser = await prisma.user.findFirst({
+      const prismaUser = await db.user.findFirst({
         where: {
           email: token.email,
         },
@@ -51,7 +43,7 @@ export const config = {
         return token;
       }
       if (!prismaUser.username) {
-        await prisma.user.update({
+        await db.user.update({
           where: {
             id: prismaUser.id,
           },
@@ -70,16 +62,8 @@ export const config = {
       };
     },
   },
-} satisfies NextAuthOptions
+}
 
-export default NextAuth(config);
+export const getAuthOptions = () => getServerSession(authOptions)
 
 // Use it in server contexts
-export function auth(
-  ...args:
-    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
-    | [NextApiRequest, NextApiResponse]
-    | []
-) {
-  return getServerSession(...args, config);
-}

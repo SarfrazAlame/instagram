@@ -1,7 +1,7 @@
 import { fetchProfile } from "@/lib/data";
 import { Metadata, ResolvingMetadata } from "next";
 import React from "react";
-import { auth } from "../../../../auth";
+import { getAuthOptions } from "../../../lib/auth";
 import { notFound } from "next/navigation";
 import ProfileHeader from "@/components/ProfileHeader";
 import UserAvatar from "@/components/UserAvatar";
@@ -34,10 +34,10 @@ export async function generateMetadata(
 
 export async function ProfileLayout({ children, params: { username } }: Props) {
   const profile = await fetchProfile(username);
-  const session = await auth();
+  const session = await getAuthOptions();
   const isCurrrentUser = session?.user.id === profile?.id;
   const isFollowing = profile?.followedBy.some(
-    (user) => user.followerId === session.user.id
+    (user) => user.followerId === session?.user.id
   );
 
   if (!profile) {
