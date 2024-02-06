@@ -7,9 +7,6 @@ import type { Adapter } from 'next-auth/adapters';
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db) as Adapter,
-  session: {
-    strategy: "jwt",
-  },
   pages: {
     signIn: "/login",
   },
@@ -19,8 +16,11 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
-    session({ session, token }) {
+    async session({ session, token }) {
       if (token) {
         session.user.id = token.id;
         session.user.name = token.name;
@@ -28,8 +28,8 @@ export const authOptions: NextAuthOptions = {
         session.user.image = token.picture;
         session.user.username = token.username;
       }
-
       return session;
+
     },
     async jwt({ token, user }) {
       const prismaUser = await db.user.findFirst({
