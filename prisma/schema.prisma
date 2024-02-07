@@ -21,10 +21,10 @@ model VerificationToken {
 
 model Account {
     id                 String  @id @default(cuid())
-    userId             String  @map("user_id")
+    userId             String  
     type               String
     provider           String
-    providerAccountId  String  @map("provider_account_id")
+    providerAccountId  String   
     refresh_token      String? @db.Text
     access_token       String? @db.Text
     expires_at         Int?
@@ -38,15 +38,14 @@ model Account {
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
-    @@map("accounts")
 }
 
 model Session {
     id           String   @id @default(cuid())
-    sessionToken String   @unique @map("session_token")
+    sessionToken String   @unique  
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId       String   @map("user_id")
+    userId       String    
 
     @@index([userId])
 }
