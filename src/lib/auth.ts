@@ -1,7 +1,7 @@
 import { db } from "@/lib/prisma";
 import GoogleProvider from "next-auth/providers/google"
 import { NextAuthOptions, getServerSession } from "next-auth";
-import {PrismaAdapter} from "@auth/prisma-adapter"
+import { PrismaAdapter } from "@auth/prisma-adapter"
 import type { Adapter } from 'next-auth/adapters';
 
 
@@ -14,6 +14,7 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
   session: {
