@@ -1,5 +1,5 @@
 import type { Session, User } from "@prisma/client";
-import type { JWT } from "@auth/core/jwt";
+import type { JWT } from "next-auth/jwt";
 
 
 declare module "next-auth/jwt" {

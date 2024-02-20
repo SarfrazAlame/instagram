@@ -72,6 +72,7 @@ const CreatePage = () => {
                     fill
                     className="rounded-md object-cover"
                   />
+                  
                 </AspectRatio>
               </div>
             ) : (

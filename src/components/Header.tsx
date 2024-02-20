@@ -23,8 +23,8 @@ const Header = () => {
           />
         </div>
 
-        <Button size={'icon'} variant={'ghost'}>
-          <Heart/>
+        <Button size={"icon"} variant={"ghost"}>
+          <Heart />
         </Button>
       </div>
     </header>
