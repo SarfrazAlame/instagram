@@ -17,10 +17,10 @@ export const authOptions: NextAuthOptions = {
       allowDangerousEmailAccountLinking: true,
     }),
   ],
+  secret:process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
   },
-  secret:process.env.NEXTAUTH_SECRET,
   callbacks: {
     async session({ session, token }) {
       if (token) {
