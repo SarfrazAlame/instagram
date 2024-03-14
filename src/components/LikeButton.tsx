@@ -16,6 +16,7 @@ const LikeButton = ({
 }) => {
   const predicate = (like: Like) =>
     like.userId === userId && like.postId === post.id;
+
   const [optimisticlikes, addoptimisticsLiske] = useOptimistic<Like[]>(
     post.likes,
     // @ts-ignore
@@ -32,7 +33,7 @@ const LikeButton = ({
           const postId = formData.get("postId");
           addoptimisticsLiske({ userId, postId });
 
-          await likePost(postId)
+          await likePost(postId);
         }}
       >
         <input type="hidden" name="postId" value={post.id} />

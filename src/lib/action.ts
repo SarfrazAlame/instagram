@@ -6,7 +6,9 @@ import { getUserId } from "./utils"
 import { z } from 'zod'
 import { redirect } from "next/navigation"
 
-export default async function createPost(values: z.infer<typeof CreatePost>) {
+type post = z.infer<typeof CreatePost>
+
+export default async function createPost(values: post) {
     const userId = await getUserId()
 
     const validatedFields = CreatePost.safeParse(values)
@@ -138,7 +140,6 @@ export async function likePost(value: FormDataEntryValue | null) {
     } catch (error) {
         return { message: "Database Error: Failed to Like Post" }
     }
-
 }
 
 
