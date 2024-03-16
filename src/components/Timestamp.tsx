@@ -8,6 +8,7 @@ type Props = {
   className?: string;
 };
 
+
 const Timestamp = ({ createdAt, className }: Props) => {
   return (
     <ReactTimeago

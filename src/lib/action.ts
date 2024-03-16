@@ -1,6 +1,6 @@
 'use server'
 import { revalidatePath } from "next/cache"
-import { db } from "./prisma"
+import prisma from "./prisma"
 import { BookmarkSchema, CreateComment, CreatePost, DeleteComment, DeletePost, FollowUser, LikeSchema, UpdatePost, UpdateUser } from "./schemas"
 import { getUserId } from "./utils"
 import { z } from 'zod'
@@ -24,7 +24,7 @@ export default async function createPost(values: post) {
 
     // Create post logic
     try {
-        await db.post.create({
+        await prisma.post.create({
             data: {
                 caption,
                 fileUrl,
@@ -53,7 +53,7 @@ export async function deletePost(formData: FormData) {
         id: formData.get('id')
     })
 
-    const post = await db.post.findUnique({
+    const post = await prisma.post.findUnique({
         where: {
             id,
             userId
@@ -65,7 +65,7 @@ export async function deletePost(formData: FormData) {
     }
 
     try {
-        await db.post.delete({
+        await prisma.post.delete({
             where: {
                 id
             }
@@ -92,7 +92,7 @@ export async function likePost(value: FormDataEntryValue | null) {
 
     const { postId } = validatedFields.data
 
-    const post = await db.post.findUnique({
+    const post = await prisma.post.findUnique({
         where: {
             id: postId
         }
@@ -102,7 +102,7 @@ export async function likePost(value: FormDataEntryValue | null) {
         throw new Error("Post not found")
     }
 
-    const like = await db.like.findUnique({
+    const like = await prisma.like.findUnique({
         where: {
             postId_userId: {
                 postId,
@@ -113,7 +113,7 @@ export async function likePost(value: FormDataEntryValue | null) {
 
     if (like) {
         try {
-            await db.like.delete({
+            await prisma.like.delete({
                 where: {
                     postId_userId: {
                         postId,
@@ -129,7 +129,7 @@ export async function likePost(value: FormDataEntryValue | null) {
     }
 
     try {
-        await db.like.create({
+        await prisma.like.create({
             data: {
                 postId,
                 userId
@@ -156,7 +156,7 @@ export async function bookmarkPost(value: FormDataEntryValue | null) {
 
     const { postId } = validatedFields.data
 
-    const post = await db.post.findUnique({
+    const post = await prisma.post.findUnique({
         where: {
             id: postId
         }
@@ -166,7 +166,7 @@ export async function bookmarkPost(value: FormDataEntryValue | null) {
         throw new Error("Post not founded")
     }
 
-    const bookmark = await db.savedPost.findUnique({
+    const bookmark = await prisma.savedPost.findUnique({
         where: {
             postId_userId: {
                 postId,
@@ -177,7 +177,7 @@ export async function bookmarkPost(value: FormDataEntryValue | null) {
 
     if (bookmark) {
         try {
-            await db.savedPost.delete({
+            await prisma.savedPost.delete({
                 where: {
                     postId_userId: {
                         postId,
@@ -195,7 +195,7 @@ export async function bookmarkPost(value: FormDataEntryValue | null) {
     }
 
     try {
-        await db.savedPost.create({
+        await prisma.savedPost.create({
             data: {
                 postId,
                 userId
@@ -225,7 +225,7 @@ export async function createComment(values: z.infer<typeof CreateComment>) {
 
     const { postId, body } = validatedFields.data
 
-    const post = await db.post.findUnique({
+    const post = await prisma.post.findUnique({
         where: {
             id: postId
         }
@@ -236,7 +236,7 @@ export async function createComment(values: z.infer<typeof CreateComment>) {
     }
 
     try {
-        await db.comment.create({
+        await prisma.comment.create({
             data: {
                 body,
                 postId,
@@ -259,7 +259,7 @@ export async function deleteComment(formData: FormData) {
         id: formData.get('id')
     })
 
-    const comment = await db.comment.findUnique({
+    const comment = await prisma.comment.findUnique({
         where: {
             id,
             userId
@@ -270,7 +270,7 @@ export async function deleteComment(formData: FormData) {
         throw new Error("Comment not found")
     }
     try {
-        await db.comment.delete({
+        await prisma.comment.delete({
             where: {
                 id
             }
@@ -296,7 +296,7 @@ export async function updatePost(values: z.infer<typeof UpdatePost>) {
 
     const { id, fileUrl, caption } = validatedFields.data
 
-    const post = await db.post.findUnique({
+    const post = await prisma.post.findUnique({
         where: {
             id,
             userId
@@ -308,7 +308,7 @@ export async function updatePost(values: z.infer<typeof UpdatePost>) {
     }
 
     try {
-        await db.post.update({
+        await prisma.post.update({
             where: {
                 id
             },
@@ -340,7 +340,7 @@ export async function updateProfile(values: z.infer<typeof UpdateUser>) {
     const { bio, gender, image, name, username, website } = validatedFields.data
 
     try {
-        await db.user.update({
+        await prisma.user.update({
             where: {
                 id: userId
             },
@@ -367,7 +367,7 @@ export async function followUser(formData: FormData) {
 
     const { id } = FollowUser.parse({ id: formData.get("id") })
 
-    const user = await db.user.findUnique({
+    const user = await prisma.user.findUnique({
         where: {
             id
         }
@@ -377,7 +377,7 @@ export async function followUser(formData: FormData) {
         throw new Error('User not found')
     }
 
-    const follows = await db.follows.findUnique({
+    const follows = await prisma.follows.findUnique({
         where: {
             followerId_followingId: {
                 // followerId is of the person who wants to follow
@@ -390,7 +390,7 @@ export async function followUser(formData: FormData) {
 
     if (follows) {
         try {
-            await db.follows.delete({
+            await prisma.follows.delete({
                 where: {
                     followerId_followingId: {
                         followerId: userId,
@@ -408,7 +408,7 @@ export async function followUser(formData: FormData) {
     }
 
     try {
-        await db.follows.create({
+        await prisma.follows.create({
             data: {
                 followerId: userId,
                 followingId: id

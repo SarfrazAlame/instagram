@@ -1,11 +1,11 @@
 import { unstable_noStore as noStore } from "next/cache";
-import { db } from "./prisma";
+import prisma from "./prisma";
 
 export async function fetchPosts() {
   noStore()
 
   try {
-    const data = await db.post.findMany({
+    const data = await prisma.post.findMany({
       include: {
         comments: {
           include: {
@@ -40,7 +40,7 @@ export async function fetchPostById(id: string) {
   noStore();
 
   try {
-    const data = await db.post.findUnique({
+    const data = await prisma.post.findUnique({
       where: {
         id,
       },
@@ -78,7 +78,7 @@ export async function fetchPostsByUsername(username: string, postId?: string) {
   noStore()
 
   try {
-    const data = await db.post.findMany({
+    const data = await prisma.post.findMany({
       where: {
         user: {
           username
@@ -122,7 +122,7 @@ export async function fetchProfile(username: string) {
   noStore()
 
   try {
-    const data = await db.user.findUnique({
+    const data = await prisma.user.findUnique({
       where: {
         username
       },
@@ -172,7 +172,7 @@ export async function fetchSavedPostsByUsername(username: string) {
   noStore()
 
   try {
-    const data = await db.savedPost.findMany({
+    const data = await prisma.savedPost.findMany({
       where: {
         user: {
           username
