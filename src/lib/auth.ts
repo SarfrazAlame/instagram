@@ -5,7 +5,8 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import type { Adapter } from 'next-auth/adapters';
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as Adapter,
+  // @ts-expect-error
+  adapter: PrismaAdapter(prisma),
   pages: {
     signIn: "/login",
   },
