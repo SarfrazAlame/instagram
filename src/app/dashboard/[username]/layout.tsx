@@ -24,7 +24,6 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const username = params.username;
-
   const profile = await fetchProfile(username);
 
   return {
@@ -32,7 +31,7 @@ export async function generateMetadata(
   };
 }
 
-export async function ProfileLayout({ children, params: { username } }: Props) {
+const ProfileLayout: React.FC<Props> = async ({ children, params: { username } }: Props) => {
   const profile = await fetchProfile(username);
   const session = await getAuthOptions();
   const isCurrrentUser = session?.user.id === profile?.id;
@@ -137,8 +136,8 @@ export async function ProfileLayout({ children, params: { username } }: Props) {
         </div>
       </div>
       <div className="mt-12">
-        <ProfileTabs profile={profile} isCurrentUser={isCurrrentUser}/>
-      {children}
+        <ProfileTabs profile={profile} isCurrentUser={isCurrrentUser} />
+        {children}
       </div>
     </div>
   );
