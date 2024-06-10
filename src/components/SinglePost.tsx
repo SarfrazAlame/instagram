@@ -1,6 +1,6 @@
 import { fetchPostById } from "@/lib/data";
 import React from "react";
-import {  getAuthOptions } from "../lib/auth";
+import { getAuthOptions } from "../lib/auth";
 import { notFound } from "next/navigation";
 import { Card } from "./ui/card";
 import Image from "next/image";
@@ -63,37 +63,39 @@ const SinglePost = async ({ id }: { id: string }) => {
             <PostOptions post={post} userId={userId} />
           </div>
 
-          {post.comments.length===0&&(
+          {post.comments.length === 0 && (
             <div className="flex flex-col items-center gap-1.5 flex-1 justify-center">
-                <p className="text-xl lg:text-2xl font-extrabold">No comments yet</p>
-                <p className="text-sm font-medium">Start the conversation</p>
+              <p className="text-xl lg:text-2xl font-extrabold">
+                No comments yet
+              </p>
+              <p className="text-sm font-medium">Start the conversation</p>
             </div>
           )}
 
-          {post.comments.length>0&&(
+          {post.comments.length > 0 && (
             <ScrollArea className="hidden md:inline py-1.5 flex-1">
-                <MiniPost post={post}/>
-                {post.comments.map((comment)=>(
-                    <Comment key={comment.id} comment={comment} />
-                ))}
+              <MiniPost post={post} />
+              {post.comments.map((comment) => (
+                <Comment key={comment.id} comment={comment} />
+              ))}
             </ScrollArea>
           )}
 
           <div className="px-2 hidden md:block mt-auto border-y p-2.5">
-            <PostActions post={post} userId={userId}/>
+            <PostActions post={post} userId={userId} />
             <time className="text-[11px] uppercase text-zinc-500 font-medium">
-              {new Date(post.createdAt).toLocaleString('en-US',{
-                month:'long',
-                day:"numeric"
+              {new Date(post.createdAt).toLocaleString("en-US", {
+                month: "long",
+                day: "numeric",
               })}
             </time>
           </div>
-          <CommentForm postId={id} className="hidden md:inline-flex"/>
+          <CommentForm postId={id} className="hidden md:inline-flex" />
         </div>
       </Card>
 
       <div className="md:hidden">
-        <Post post={post}/>
+        <Post post={post} />
       </div>
     </>
   );

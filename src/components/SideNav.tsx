@@ -8,6 +8,7 @@ import ProfileLink from "./ProfileLink";
 const SideNav = async () => {
   const session = await getAuthOptions();
   const user = session?.user;
+  console.log(user)
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2">
       <div
