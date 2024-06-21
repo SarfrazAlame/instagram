@@ -209,3 +209,13 @@ export async function fetchSavedPostsByUsername(username: string) {
     throw new Error('failed to fetch  saved posts')
   }
 }
+
+export async function fetchUsers() {
+  try {
+    const users = await prisma.user.findMany({})
+    return users
+  } catch (error) {
+    console.log(error)
+    return []
+  }
+}

@@ -94,8 +94,8 @@ const PostView = ({ id, post }: { id: string; post: PostWithExtras }) => {
           userId={user?.id}
           className="md:hidden border-b p-2.5"
         />
-        <CommentForm postId={id} className="md:hidden" inputRef={inputRef}/>
-        <ViewPost className="md:hidden"/>
+        <CommentForm postId={id} className="md:hidden" inputRef={inputRef} />
+        <ViewPost className="md:hidden" />
       </DialogContent>
     </Dialog>
   );
